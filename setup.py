@@ -25,13 +25,12 @@ setup(
         "Operating System :: MacOS",
 
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.4",
-        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.10",
     ],
     keywords="home-automation panasonic viera tv",
 
     # Requirements
-    install_requires=["qth>=0.6.0", "panasonic-viera>=0.3.1"],
+    install_requires=["qth>=0.7.0", "panasonic-viera>=0.3.1", "aiohttp"],
 
     # Scripts
     entry_points={

@@ -73,7 +73,6 @@ def main():
     
     client = qth.Client(
         "qth_panasonic_viera", "Panasonic VIERA TV control.",
-        loop=loop,
         host=args.host,
         port=args.port,
         keepalive=args.keepalive,
