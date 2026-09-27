@@ -16,6 +16,8 @@ async def async_main(
     qth_path_prefix,
     update_interval,
 ):
+    loop = asyncio.get_event_loop()
+    
     client = qth.Client(
         "qth_panasonic_viera", "Panasonic VIERA TV control.",
         host=qth_host,
