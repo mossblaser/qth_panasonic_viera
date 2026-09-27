@@ -8,9 +8,23 @@ import panasonic_viera
 from .version import __version__
 
 
-loop = asyncio.get_event_loop()
-
-async def async_main(client, tv, qth_path_prefix, update_interval):
+async def async_main(
+    qth_host,
+    qth_port,
+    qth_keepalive,
+    tv_hostname,
+    qth_path_prefix,
+    update_interval,
+):
+    client = qth.Client(
+        "qth_panasonic_viera", "Panasonic VIERA TV control.",
+        host=qth_host,
+        port=qth_port,
+        keepalive=qth_keepalive,
+    )
+    
+    tv = panasonic_viera.RemoteControl(tv_hostname)
+    
     power_path = "{}power".format(qth_path_prefix)
     
     await client.register(power_path, qth.PROPERTY_MANY_TO_ONE,
@@ -51,6 +65,8 @@ async def async_main(client, tv, qth_path_prefix, update_interval):
         
         loop.call_later(update_interval, loop.create_task, update_power_state())
     await update_power_state()
+    
+    await asyncio.Event().wait()
 
 def main():
     parser = ArgumentParser(
@@ -71,18 +87,16 @@ def main():
                         version="%(prog)s {}".format(__version__))
     args = parser.parse_args()
     
-    client = qth.Client(
-        "qth_panasonic_viera", "Panasonic VIERA TV control.",
-        host=args.host,
-        port=args.port,
-        keepalive=args.keepalive,
+    asyncio.run(
+        async_main(
+            args.host,
+            args.port,
+            args.keepalive,
+            args.tv_hostname,
+            args.qth_path_prefix,
+            args.update_interval,
+        ),
     )
-    tv = panasonic_viera.RemoteControl(args.tv_hostname)
-    
-    loop.run_until_complete(async_main(client, tv,
-                                       args.qth_path_prefix,
-                                       args.update_interval))
-    loop.run_forever()
 
 if __name__ == "__main__":
     main()
